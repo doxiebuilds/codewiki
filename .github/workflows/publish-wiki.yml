@@ -1,0 +1,48 @@
+name: Publish wiki
+
+# Mirrors docs/wiki/ into this repo's GitHub wiki. The wiki is a downstream copy — it is fully
+# replaced on every run, so review changes in the PR that touches docs/wiki/, not in the wiki UI.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/wiki/**"
+      - "scripts/publish_wiki.py"
+      - ".github/workflows/publish-wiki.yml"
+  workflow_dispatch:
+
+# The wiki repo has one branch and no PR flow, so two overlapping runs would race to push and one
+# would fail on a stale clone. Serialize, and let a newer commit supersede a queued older one.
+concurrency:
+  group: publish-wiki
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # The default GITHUB_TOKEN cannot push to wiki repos regardless of `permissions:` — wikis
+      # sit outside the token's scope. This needs a PAT (classic, `repo` scope; or fine-grained
+      # with Contents: write on this repo) stored as the WIKI_TOKEN secret.
+      - name: Check the wiki token is configured
+        env:
+          WIKI_TOKEN: ${{ secrets.WIKI_TOKEN }}
+        run: |
+          if [ -z "$WIKI_TOKEN" ]; then
+            echo "::error::WIKI_TOKEN secret is not set — see scripts/publish_wiki.py"
+            exit 1
+          fi
+
+      # publish_wiki.py is stdlib-only, so there is nothing to install first.
+      - name: Sync docs/wiki to the wiki repo
+        env:
+          WIKI_TOKEN: ${{ secrets.WIKI_TOKEN }}
+        run: |
+          python scripts/publish_wiki.py --push \
+            --remote "https://x-access-token:${WIKI_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git"

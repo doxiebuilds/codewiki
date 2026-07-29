@@ -38,6 +38,24 @@ See the README's "Writing your own domain extractor" section and
 should stay generic (no assumptions about any one repo's directory layout or config format) —
 anything repo-specific belongs in a separate, opt-in plugin.
 
+## Publishing the wiki
+
+`docs/wiki/` is mirrored into this repo's GitHub wiki by `scripts/publish_wiki.py`, which renames
+pages to the wiki's flat namespace (first page becomes `Home`), rewrites `[x](page.md)` links to
+`[x](Page)`, and generates `_Sidebar.md`/`_Footer.md`. Build locally without pushing:
+
+```bash
+python scripts/publish_wiki.py            # writes build/wiki/
+python scripts/publish_wiki.py --push     # mirrors it to the wiki repo
+```
+
+The wiki is a downstream copy and is replaced wholesale on every sync — review page changes in
+the PR that touches `docs/wiki/`, never in the wiki's web editor. `.github/workflows/publish-wiki.yml`
+runs the sync on pushes to `main`. It needs two one-time setup steps: enable Settings → Features →
+Wikis and save a first page in the web UI (GitHub doesn't create the wiki repo until then), and
+add a PAT with `repo` scope as the `WIKI_TOKEN` secret (the default `GITHUB_TOKEN` can't push to
+wikis).
+
 ## Tests
 
 `pytest` from the repo root. Tests use a fixed synthetic config (see `tests/conftest.py`'s
