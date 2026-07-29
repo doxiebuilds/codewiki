@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info
+build/
+dist/
+.venv/
+venv/
+.env
+.env.*
+
+# test/lint/type-check caches
+.coverage
+htmlcov/
+coverage.xml
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+
+# codewiki's own generated output — never ship generated wiki content in the generator repo
+docs/wiki/
+docs/.codewiki_state/
+*.db
+*.sqlite
+*.sqlite3
+
+# editor/OS/agent cruft
+.DS_Store
+.idea/
+.vscode/
+.claude/

@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install codewiki (editable, dev + server extras)
+        run: pip install -e ".[dev,server]"
+
+      - name: Run tests
+        run: pytest
+
+  # Editable installs resolve data files (schema.sql, page.md.j2, pages.example.yaml) against the
+  # source tree, so they can't catch a missing `package-data` entry — only a real wheel install
+  # can. This job builds the actual artifact PyPI would ship and runs the CLI against it in a
+  # scratch repo, so a packaging regression fails CI instead of surfacing as a user's first-run
+  # crash.
+  packaging-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the wheel and sdist
+        run: |
+          pip install build twine
+          python -m build
+          twine check dist/*
+
+      - name: Install the built wheel into a clean environment
+        run: |
+          python -m venv /tmp/codewiki-smoke
+          /tmp/codewiki-smoke/bin/pip install dist/*.whl
+
+      - name: Confirm the top-level namespace isn't polluted
+        run: |
+          ! /tmp/codewiki-smoke/bin/python -c "import server" 2>/dev/null
+
+      - name: Run the CLI against a scratch repo
+        run: |
+          mkdir -p /tmp/codewiki-target && cd /tmp/codewiki-target
+          git init -q .
+          git config user.email smoke@example.com
+          git config user.name smoke
+          printf 'def hello():\n    return 1\n' > mod.py
+          git add -A && git commit -qm init
+          /tmp/codewiki-smoke/bin/codewiki index --full
+          /tmp/codewiki-smoke/bin/codewiki init
+          /tmp/codewiki-smoke/bin/codewiki assemble --no-llm
+          test -f docs/wiki/manifest.json

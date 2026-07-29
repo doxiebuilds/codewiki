@@ -1,0 +1,68 @@
+# Page taxonomy — declarative map of wiki page -> code it documents. Each page pulls the
+# summaries of packages under its `include` prefixes and renders the listed `domain` node kinds
+# as reference tables (see indexer/domain/builtin.py for what kinds exist). Adding a page = adding
+# an entry; no code change. Citations (path:line) and Mermaid diagrams are computed from the code
+# graph at render time, so they cannot drift from the source.
+#
+# This is a GENERIC STARTER taxonomy, bundled as the fallback when the repo you're documenting
+# has no `pages.yaml` of its own. Copy it to <your-repo-root>/pages.yaml and edit the `include`
+# prefixes to match your actual directory layout (they're repo-root-relative, or
+# source-subdir-relative if `codewiki.toml` sets one — see config.py).
+
+pages:
+  - slug: overview
+    title: Overview
+    order: 1
+    include:
+      - src
+      - app
+      - server
+      - lib
+
+  - slug: api
+    title: API
+    order: 2
+    include:
+      - api
+      - server/api
+      - src/api
+      - app/api
+    domain: [route, ws_event]
+
+  - slug: data-model
+    title: Data Model & Storage
+    order: 3
+    include:
+      - db
+      - storage
+      - models
+      - migrations
+    domain: [db_table]
+
+  - slug: frontend
+    title: Frontend
+    order: 4
+    include:
+      - frontend
+      - web
+      - ui
+      - client
+    domain: [api_call]
+
+  - slug: background-jobs
+    title: Background Jobs & Messaging
+    order: 5
+    include:
+      - jobs
+      - workers
+      - tasks
+    domain: [redis_channel]
+
+  - slug: testing
+    title: Testing
+    order: 6
+    keep_tests: true          # this page IS about the tests — rank them normally
+    include:
+      - tests
+      - test
+      - spec

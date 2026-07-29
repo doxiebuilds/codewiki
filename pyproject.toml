@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codegraph-wiki"
+version = "0.1.0"
+description = "A code-graph-grounded wiki generator: tree-sitter indexing, hash-gated LLM summaries, and a graph-validated page writer with path:line citations and Mermaid diagrams."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "codewiki contributors" }]
+keywords = ["documentation", "wiki", "tree-sitter", "code-graph", "llm", "static-analysis"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Documentation",
+  "Topic :: Software Development :: Documentation",
+]
+dependencies = [
+  "tree-sitter>=0.21",
+  "tree-sitter-language-pack>=0.2",
+  "PyYAML>=6.0",
+  "Jinja2>=3.1",
+  "networkx>=3.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/doxiebuilds/codewiki"
+Repository = "https://github.com/doxiebuilds/codewiki"
+Issues = "https://github.com/doxiebuilds/codewiki/issues"
+
+[project.optional-dependencies]
+server = ["fastapi>=0.110", "uvicorn>=0.29"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+codewiki = "codewiki.build:main"
+
+[tool.setuptools.packages.find]
+include = ["codewiki*"]
+
+[tool.setuptools.package-data]
+codewiki = ["store/*.sql", "assembly/*.yaml", "templates/*.j2", "viewer/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
