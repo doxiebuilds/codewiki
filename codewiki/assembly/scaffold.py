@@ -130,8 +130,8 @@ def propose(conn: sqlite3.Connection) -> list[dict]:
 
     taken = {"overview"}
     for prefix, _ in groups:
-        if len(groups) == 1 and prefix in top:
-            continue                       # the overview page already covers it
+        if prefix in top:
+            continue                       # the overview page already covers this root verbatim
         slug = _slugify(_leaf(prefix)) or f"page-{order}"
         while slug in taken:
             slug = f"{slug}-{order}"

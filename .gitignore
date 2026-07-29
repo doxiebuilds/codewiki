@@ -19,9 +19,10 @@ coverage.xml
 .tox/
 .nox/
 
-# codewiki's own generated output — never ship generated wiki content in the generator repo
-docs/wiki/
+# codewiki's own generated output — the wiki itself is committed as a live, self-generated
+# example; the code-graph DB + summary cache underneath it is build state, not shippable content
 docs/.codewiki_state/
+!docs/wiki/
 *.db
 *.sqlite
 *.sqlite3

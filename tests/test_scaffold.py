@@ -58,6 +58,35 @@ def test_propose_empty_graph_yields_nothing(tmp_path):
     assert scaffold.propose(conn) == []
 
 
+def _pkg_symbols(conn, pkg: str, n: int) -> None:
+    """Insert `n` throwaway function symbols under `pkg` — enough to clear MIN_SYMBOLS."""
+    for i in range(n):
+        sid = f"{pkg}::fn{i}"
+        conn.execute("INSERT OR IGNORE INTO files(path,language,sha256,size,n_symbols) "
+                     "VALUES(?,?,?,?,1)", (f"{pkg}/f{i}.py", "python", sid, 1))
+        conn.execute(
+            "INSERT INTO symbols(id,file_path,kind,name,qualname,package,start_line,end_line,"
+            "signature,content_hash,rollup_hash) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+            (sid, f"{pkg}/f{i}.py", "function", f"fn{i}", f"fn{i}", pkg, 1, 5, f"fn{i}", sid, sid))
+    conn.commit()
+
+
+def test_propose_does_not_duplicate_a_root_level_bucket(tmp_path):
+    """Regression: a package whose modules sit directly at a repo root (package == "app", no
+    subdirectory) used to get BOTH the overview page's `include` (which already lists "app" as
+    a root) AND its own second page also `include: [app]` — an exact duplicate. Found by running
+    `codewiki init` against codewiki's own repo, where root-level modules (build.py, config.py,
+    ...) collided with the "codewiki" root itself."""
+    conn = db.connect(tmp_path / "g.db")
+    _pkg_symbols(conn, "app", 10)          # root-level modules — same package as the root itself
+    _pkg_symbols(conn, "app/sub", 10)      # a real subpackage
+
+    pages = scaffold.propose(conn)
+    includes = [p["include"] for p in pages]
+    assert includes.count(["app"]) == 1, f"'app' must appear as an include list exactly once: {pages}"
+    assert ["app/sub"] in includes
+
+
 def test_render_yaml_round_trips_through_the_loader(seeded_conn_with_tests, tmp_path):
     pages = scaffold.propose(seeded_conn_with_tests)
     text = scaffold.render_yaml(pages)

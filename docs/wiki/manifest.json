@@ -1,0 +1,168 @@
+{
+  "generated_at": "2026-07-29T14:40:43.534412+00:00",
+  "model": "qwen/qwen3.6-35b-a3b",
+  "page_count": 9,
+  "pages": [
+    {
+      "file": "quickstart.md",
+      "id": "00-quickstart",
+      "order": 0,
+      "slug": "quickstart",
+      "source_refs": [],
+      "summary": "The CodeWiki system is built around a deterministic, three-stage workflow that transforms raw code into structured documentation without relying on stochastic AI models during the indexing phase.",
+      "title": "Quickstart",
+      "written_at": "2026-07-29T14:40:43.533895+00:00"
+    },
+    {
+      "file": "overview.md",
+      "id": "01-overview",
+      "order": 1,
+      "slug": "overview",
+      "source_refs": [
+        "codewiki/assembly/diagrams.py",
+        "codewiki/assembly/pages.py",
+        "codewiki/assembly/render.py",
+        "codewiki/assembly/scaffold.py",
+        "codewiki/build.py",
+        "codewiki/config.py",
+        "codewiki/generator/calibrate.py",
+        "codewiki/generator/context.py",
+        "codewiki/generator/summarize.py",
+        "codewiki/indexer/discovery.py",
+        "codewiki/indexer/domain/base.py",
+        "codewiki/indexer/domain/builtin.py",
+        "codewiki/indexer/graph.py",
+        "codewiki/indexer/parsers/base.py",
+        "codewiki/indexer/parsers/python.py"
+      ],
+      "summary": "The CodeWiki system operates through a three-stage workflow that begins with indexing code into a SQLite graph, followed by generating LLM-based summaries, and finally assembling Markdown output.",
+      "title": "Overview",
+      "written_at": "2026-07-29T14:29:30.860279+00:00"
+    },
+    {
+      "file": "writer.md",
+      "id": "02-writer",
+      "order": 2,
+      "slug": "writer",
+      "source_refs": [
+        "codewiki/writer/bundle.py",
+        "codewiki/writer/diagram.py",
+        "codewiki/writer/gitlog.py",
+        "codewiki/writer/pointer.py",
+        "codewiki/writer/prompts.py",
+        "codewiki/writer/sections.py",
+        "codewiki/writer/skeleton.py",
+        "codewiki/writer/sources.py",
+        "codewiki/writer/validate.py",
+        "codewiki/writer/write.py"
+      ],
+      "summary": "The `codewiki/writer` package implements a 'plan-then-fill' documentation pipeline that replaces stochastic context retrieval with deterministic, pre-computed evidence bundles.",
+      "title": "Writer",
+      "written_at": "2026-07-29T14:31:10.491893+00:00"
+    },
+    {
+      "file": "indexer.md",
+      "id": "03-indexer",
+      "order": 3,
+      "slug": "indexer",
+      "source_refs": [
+        "codewiki/indexer/discovery.py",
+        "codewiki/indexer/domain/base.py",
+        "codewiki/indexer/domain/builtin.py",
+        "codewiki/indexer/graph.py",
+        "codewiki/indexer/parsers/__init__.py",
+        "codewiki/indexer/parsers/base.py",
+        "codewiki/indexer/parsers/python.py",
+        "codewiki/indexer/parsers/rust.py",
+        "codewiki/indexer/parsers/typescript.py",
+        "codewiki/indexer/resolve.py",
+        "codewiki/indexer/run.py"
+      ],
+      "summary": "The `codewiki/indexer` package orchestrates a multi-stage indexing workflow designed for deterministic behavior without Large Language Models.",
+      "title": "Indexer",
+      "written_at": "2026-07-29T14:32:50.687603+00:00"
+    },
+    {
+      "file": "assembly.md",
+      "id": "04-assembly",
+      "order": 4,
+      "slug": "assembly",
+      "source_refs": [
+        "codewiki/assembly/diagrams.py",
+        "codewiki/assembly/pages.example.yaml",
+        "codewiki/assembly/pages.py",
+        "codewiki/assembly/render.py",
+        "codewiki/assembly/scaffold.py"
+      ],
+      "summary": "The `codewiki/assembly` package orchestrates the creation of static documentation by combining taxonomy definitions with runtime graph data.",
+      "title": "Assembly",
+      "written_at": "2026-07-29T14:34:20.143049+00:00"
+    },
+    {
+      "file": "generator.md",
+      "id": "05-generator",
+      "order": 5,
+      "slug": "generator",
+      "source_refs": [
+        "codewiki/generator/calibrate.py",
+        "codewiki/generator/context.py",
+        "codewiki/generator/summarize.py"
+      ],
+      "summary": "The `codewiki/generator` package serves as the central orchestrator for code generation, specifically focusing on hierarchical summarization while isolating AI-dependent logic.",
+      "title": "Generator",
+      "written_at": "2026-07-29T14:36:08.515048+00:00"
+    },
+    {
+      "file": "store.md",
+      "id": "06-store",
+      "order": 6,
+      "slug": "store",
+      "source_refs": [
+        "codewiki/store/db.py",
+        "codewiki/store/schema.sql"
+      ],
+      "summary": "The `codewiki/store` package serves as the foundational storage backend for the Code-graph system, ensuring reproducible data persistence without relying on stochastic AI models.",
+      "title": "Store",
+      "written_at": "2026-07-29T14:37:17.925756+00:00"
+    },
+    {
+      "file": "server.md",
+      "id": "07-server",
+      "order": 7,
+      "slug": "server",
+      "source_refs": [
+        "codewiki/server/app.py",
+        "codewiki/server/reader.py"
+      ],
+      "summary": "The `codewiki/server` package orchestrates the web interface for the codewiki system, serving as the bridge between synchronous reader logic and an asynchronous FastAPI server.",
+      "title": "Server",
+      "written_at": "2026-07-29T14:38:24.322478+00:00"
+    },
+    {
+      "file": "testing.md",
+      "id": "08-testing",
+      "order": 8,
+      "slug": "testing",
+      "source_refs": [
+        "tests/conftest.py",
+        "tests/test_assemble.py",
+        "tests/test_bundle_evidence.py",
+        "tests/test_diagrams.py",
+        "tests/test_domain.py",
+        "tests/test_incremental.py",
+        "tests/test_parsers.py",
+        "tests/test_progress.py",
+        "tests/test_resolve.py",
+        "tests/test_scaffold.py",
+        "tests/test_writer_diagram.py",
+        "tests/test_writer_incremental.py",
+        "tests/test_writer_prefix.py",
+        "tests/test_writer_sections.py",
+        "tests/test_writer_skeleton.py"
+      ],
+      "summary": "The `tests` package serves as the quality assurance backbone for the codewiki system, ensuring that all major components function correctly in both isolation and integration.",
+      "title": "Testing",
+      "written_at": "2026-07-29T14:40:36.376751+00:00"
+    }
+  ]
+}
